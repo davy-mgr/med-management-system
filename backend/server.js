@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 const usersRoutes = require('./routes/usersRoutes');
-const medicinesRoutes = require('./routes/medicinesRoutes');
+const medicinesRoutes = require('./routes/medicineRoutes');
 
 app.use('/users', usersRoutes);
 app.use('/medicines', medicinesRoutes);

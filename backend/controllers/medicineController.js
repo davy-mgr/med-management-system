@@ -1,5 +1,6 @@
 // backend/controllers/medicinesController.js
-const Medicine = require('../models/medicinesModel');
+const Medicine = require('../models/medicineModel');
+const Supplier = require('../models/supplierModel');
 const { Op } = require('sequelize');
 const LOW_STOCK_THRESHOLD = 10;
 
@@ -10,6 +11,23 @@ exports.getAllMedicines = async (req, res) => {
     res.json(medicines);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+// Get all medicines WITH low stock status
+exports.getMedicinesWithStockStatus = async (req, res) => {
+  try {
+    const medicines = await Medicine.findAll({ include: { model: Supplier, as: 'supplier' } });
+
+    const result = medicines.map((med) => ({
+      ...med.toJSON(),
+      isLowStock: med.quantity <= (med.threshold || 5)
+    }));
+
+    res.json(result);
+  } catch (err) {
+    console.error(err); // log the real error
+    res.status(500).json({ error: err.message });
   }
 };
 

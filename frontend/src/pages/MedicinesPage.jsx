@@ -1,7 +1,9 @@
+// src/pages/MedicinesPage.jsx
 import React, { useState, useEffect } from 'react';
-import MedicineList from '../components/MedicineList';
 import MedicineForm from '../components/MedicineForm';
+import MedicineList from '../components/MedicineList';
 import { fetchMedicines, addMedicine, updateMedicine, deleteMedicine } from '../api/medicineApi';
+import '../styles.css';
 
 const MedicinesPage = () => {
   const [medicines, setMedicines] = useState([]);
@@ -17,14 +19,17 @@ const MedicinesPage = () => {
   }, []);
 
   const handleSave = async (med) => {
-    if (editingMedicine) {
-      await updateMedicine(editingMedicine.id, med);
-      setEditingMedicine(null);
-    } else {
-      await addMedicine(med);
-    }
-    loadMedicines();
-  };
+  const payload = { ...med, supplier_id: med.supplierId };
+  delete payload.supplierId;
+
+  if (editingMedicine) {
+    await updateMedicine(editingMedicine.id, payload);
+    setEditingMedicine(null);
+  } else {
+    await addMedicine(payload);
+  }
+  loadMedicines();
+};    
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure?')) {
@@ -33,14 +38,26 @@ const MedicinesPage = () => {
     }
   };
 
+  const lowStockMedicines = medicines.filter(m => m.isLowStock);
+
   return (
-    <div>
+    <div className="container">
       <h1>Medicines Inventory</h1>
+
+      {lowStockMedicines.length > 0 && (
+        <div className="low-stock" style={{ padding: '10px', marginBottom: '10px', borderRadius: '5px' }}>
+          ⚠️ {lowStockMedicines.length} medicine(s) are low in stock!
+        </div>
+      )}
+
       <MedicineForm
         onSave={handleSave}
         editingMedicine={editingMedicine}
         onCancel={() => setEditingMedicine(null)}
       />
+
+      <hr />
+
       <MedicineList
         medicines={medicines}
         onEdit={setEditingMedicine}

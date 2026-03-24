@@ -1,13 +1,26 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { MedicinesProvider } from './context/MedicinesContext';
+import LoginPage from './pages/LoginPage';
 import MedicinesPage from './pages/MedicinesPage';
+import SuppliersPage from './pages/SuppliersPage';
+import TransactionsPage from './pages/TransactionsPage';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/medicines" element={<MedicinesPage />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <MedicinesProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/medicines" element={<MedicinesPage />} />
+            <Route path="/suppliers" element={<SuppliersPage />} />
+            <Route path="/transactions" element={<TransactionsPage />} />
+            <Route path="*" element={<Navigate to="/login" />} />
+          </Routes>
+        </Router>
+      </MedicinesProvider>
+    </AuthProvider>
   );
 }
 

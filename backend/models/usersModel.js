@@ -9,4 +9,4 @@ const User = sequelize.define('User', {
   role: { type: DataTypes.STRING, allowNull: false, defaultValue: 'staff' }
 }, { timestamps: true });
 
-module.exports = User;
+module.exports = { User };
