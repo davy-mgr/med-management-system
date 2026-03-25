@@ -1,17 +1,31 @@
-// backend/server.js
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const app = express();
+const helmet = require('helmet');
 
-app.use(cors());
+const app = express();
+const port = process.env.PORT || 5000;
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL || '*'
+}));
+app.use(helmet());
 app.use(express.json());
 
-const usersRoutes = require('./routes/usersRoutes');
-const medicinesRoutes = require('./routes/medicineRoutes');
+// Routes
+app.use('/users', require('./routes/usersRoutes'));
+app.use('/suppliers', require('./routes/supplierRoutes'));
+app.use('/medicines', require('./routes/medicineRoutes'));
 
-app.use('/users', usersRoutes);
-app.use('/medicines', medicinesRoutes);
+// Health check
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Error handler (generic)
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Internal server error' });
+});
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});

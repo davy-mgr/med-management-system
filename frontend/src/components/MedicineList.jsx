@@ -1,44 +1,38 @@
 // src/components/MedicineList.jsx
-import React from 'react';
-import '../styles.css'; 
+import React, { useContext } from 'react';
+import { MedicinesContext } from '../context/MedicinesContext';
 
-const MedicineList = ({ medicines, onEdit, onDelete }) => {
-  if (!medicines || medicines.length === 0) return <p>No medicines in inventory.</p>;
+const MedicineList = ({ onEdit }) => {
+  const { medicines, deleteMedicine } = useContext(MedicinesContext);
 
   return (
-    <div className="container">
-      <h2>Medicine Inventory</h2>
-      {medicines.map((med) => {
-        const isLowStock = med.quantity <= (med.threshold ?? 5); // fallback threshold
-        return (
-          <div
-            key={med.id}
-            className={`medicine-item ${isLowStock ? 'low-stock' : ''}`}
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '10px',
-              borderRadius: '5px',
-              border: '1px solid #ccc',
-              marginBottom: '10px',
-              backgroundColor: isLowStock ? '#ffe6e6' : '#f9f9f9',
-              color: isLowStock ? '#a00' : '#000',
-              fontWeight: isLowStock ? 'bold' : 'normal'
-            }}
-          >
-            <div>
-              <strong>{med.name}</strong> ({med.quantity} units)
-              {isLowStock && <span style={{ marginLeft: '10px', fontWeight: 'bold' }}>LOW STOCK!</span>}
-            </div>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button onClick={() => onEdit(med)}>Edit</button>
-              {onDelete && <button onClick={() => onDelete(med.id)}>Delete</button>}
-            </div>
-          </div>
-        );
-      })}
-    </div>
+    <table className="medicine-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Quantity</th>
+          <th>Threshold</th>
+          <th>Supplier</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {medicines.map(m => (
+          <tr key={m.id}>
+            <td>{m.name}</td>
+            <td>{m.description}</td>
+            <td>{m.quantity}</td>
+            <td>{m.threshold}</td>
+            <td>{m.supplierName}</td>
+            <td>
+              <button onClick={() => onEdit(m)}>Edit</button>
+              <button onClick={() => deleteMedicine(m.id)}>Delete</button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 };
 

@@ -1,4 +1,4 @@
-// backend/models/suppliersModel.js
+// backend/models/supplierModel.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 

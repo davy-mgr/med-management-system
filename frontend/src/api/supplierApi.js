@@ -1,7 +1,21 @@
-import axios from 'axios';
-const API_URL = 'http://localhost:5000/suppliers';
+import api from './axios';
 
-export const fetchSuppliers = async () => (await axios.get(API_URL)).data;
-export const addSupplier = async (supplier) => (await axios.post(API_URL, supplier)).data;
-export const updateSupplier = async (id, supplier) => (await axios.patch(`${API_URL}/${id}`, supplier)).data;
-export const deleteSupplier = async (id) => (await axios.delete(`${API_URL}/${id}`)).data;
+export const fetchSuppliers = async () => {
+  const res = await api.get('/suppliers');
+  return res.data;
+};
+
+export const addSupplier = async (supplier) => {
+  const res = await api.post('/suppliers', supplier);
+  return res.data;
+};
+
+export const updateSupplier = async (id, supplier) => {
+  const res = await api.patch(`/suppliers/${id}`, supplier);
+  return res.data;
+};
+
+export const deleteSupplier = async (id) => {
+  const res = await api.delete(`/suppliers/${id}`);
+  return res.data;
+};

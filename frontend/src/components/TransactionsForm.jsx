@@ -1,68 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import { fetchMedicines } from '../api/medicineApi';
+// src/components/TransactionsForm.jsx
+import React, { useState, useContext } from 'react';
+import { TransactionsContext } from '../context/TransactionsContext';
+import { MedicinesContext } from '../context/MedicinesContext';
 
-const TransactionsForm = ({ onSave }) => {
-  const [medicines, setMedicines] = useState([]);
-  const [form, setForm] = useState({ medicine_id: '', quantity_change: 0, type: 'in', note: '' });
+const TransactionsForm = () => {
+  const { addTransaction } = useContext(TransactionsContext);
+  const { medicines } = useContext(MedicinesContext);
 
-  useEffect(() => {
-    const loadMedicines = async () => {
-      const data = await fetchMedicines();
-      setMedicines(data);
-    };
-    loadMedicines();
-  }, []);
+  const [formData, setFormData] = useState({
+    medicineId: '',
+    quantity: 0,
+    type: 'sale' // or 'purchase'
+  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm(prev => ({
-      ...prev,
-      [name]: name === 'quantity_change' ? parseInt(value) || 0 : value
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.medicine_id || !form.quantity_change || !form.type) {
-      return alert('Please fill all required fields!');
-    }
-    onSave(form);
-    setForm({ medicine_id: '', quantity_change: 0, type: 'in', note: '' });
+    if (!formData.medicineId || !formData.quantity) return alert('Fill all fields');
+    await addTransaction(formData);
+    setFormData({ medicineId: '', quantity: 0, type: 'sale' });
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
-      <select name="medicine_id" value={form.medicine_id} onChange={handleChange} required>
+    <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
+      <select
+        value={formData.medicineId}
+        onChange={e => setFormData({ ...formData, medicineId: e.target.value })}
+        required
+      >
         <option value="">Select Medicine</option>
         {medicines.map(m => (
-          <option key={m.id} value={m.id}>{m.name} ({m.quantity} units)</option>
+          <option key={m.id} value={m.id}>{m.name}</option>
         ))}
       </select>
-
       <input
         type="number"
-        name="quantity_change"
-        value={form.quantity_change}
-        onChange={handleChange}
-        placeholder="Quantity"
         min="1"
+        value={formData.quantity}
+        onChange={e => setFormData({ ...formData, quantity: parseInt(e.target.value) })}
+        placeholder="Quantity"
         required
       />
-
-      <select name="type" value={form.type} onChange={handleChange} required>
-        <option value="in">Stock In</option>
-        <option value="out">Stock Out</option>
+      <select
+        value={formData.type}
+        onChange={e => setFormData({ ...formData, type: e.target.value })}
+      >
+        <option value="sale">Sale</option>
+        <option value="purchase">Purchase</option>
       </select>
-
-      <input
-        type="text"
-        name="note"
-        value={form.note}
-        onChange={handleChange}
-        placeholder="Note (optional)"
-      />
-
-      <button type="submit">Log Transaction</button>
+      <button type="submit">Submit</button>
     </form>
   );
 };

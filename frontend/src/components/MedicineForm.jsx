@@ -1,18 +1,19 @@
 // src/components/MedicineForm.jsx
-import React, { useState, useEffect } from 'react';
-import '../styles.css';
-import axios from 'axios';
+import React, { useState, useEffect, useContext } from 'react';
+import { MedicinesContext } from '../context/MedicinesContext';
+import { SuppliersContext } from '../context/SuppliersContext';
 
-const MedicineForm = ({ onSave, editingMedicine, onCancel }) => {
+const MedicineForm = ({ editingMedicine, onCancel }) => {
+  const { addMedicine, updateMedicine } = useContext(MedicinesContext);
+  const { suppliers } = useContext(SuppliersContext);
+
   const [medicine, setMedicine] = useState({
     name: '',
     description: '',
     quantity: 0,
-    supplierId: '',
-    threshold: 5
+    threshold: 5,
+    supplierId: ''
   });
-
-  const [suppliers, setSuppliers] = useState([]);
 
   useEffect(() => {
     if (editingMedicine) {
@@ -22,10 +23,6 @@ const MedicineForm = ({ onSave, editingMedicine, onCancel }) => {
         threshold: Number(editingMedicine.threshold) || 5
       });
     }
-
-    axios.get('http://localhost:5000/suppliers')
-      .then(res => setSuppliers(res.data))
-      .catch(err => console.error('Error fetching suppliers:', err));
   }, [editingMedicine]);
 
   const handleChange = (e) => {
@@ -36,69 +33,38 @@ const MedicineForm = ({ onSave, editingMedicine, onCancel }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!medicine.name || !medicine.quantity || !medicine.supplierId) {
-      return alert('Please fill in all required fields!');
+      return alert('Please fill all required fields.');
     }
 
     if (medicine.threshold > medicine.quantity) {
       alert('Warning: threshold is higher than current stock!');
     }
 
-    onSave(medicine);
+    if (editingMedicine) await updateMedicine(editingMedicine.id, medicine);
+    else await addMedicine(medicine);
 
-    setMedicine({ name: '', description: '', quantity: 0, supplierId: '', threshold: 5 });
+    setMedicine({ name: '', description: '', quantity: 0, threshold: 5, supplierId: '' });
+    if (onCancel) onCancel();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="container">
-      <h2>{editingMedicine ? 'Edit Medicine' : 'Add New Medicine'}</h2>
+    <form onSubmit={handleSubmit} className="form-container">
+      <h3>{editingMedicine ? 'Edit Medicine' : 'Add Medicine'}</h3>
 
-      <input
-        name="name"
-        value={medicine.name}
-        onChange={handleChange}
-        placeholder="Medicine Name"
-        required
-      />
-
-      <input
-        name="description"
-        value={medicine.description}
-        onChange={handleChange}
-        placeholder="Description"
-      />
-
-      <input
-        name="quantity"
-        type="number"
-        min="0"
-        value={medicine.quantity}
-        onChange={handleChange}
-        placeholder="Quantity"
-        required
-      />
-
-      <input
-        name="threshold"
-        type="number"
-        min="0"
-        value={medicine.threshold}
-        onChange={handleChange}
-        placeholder="Low-stock Threshold"
-        required
-      />
+      <input name="name" placeholder="Medicine Name" value={medicine.name} onChange={handleChange} required />
+      <input name="description" placeholder="Description" value={medicine.description} onChange={handleChange} />
+      <input name="quantity" type="number" placeholder="Quantity" value={medicine.quantity} onChange={handleChange} required />
+      <input name="threshold" type="number" placeholder="Low-stock Threshold" value={medicine.threshold} onChange={handleChange} required />
 
       <select name="supplierId" value={medicine.supplierId} onChange={handleChange} required>
         <option value="">Select Supplier</option>
-        {suppliers.map(s => (
-          <option key={s.id} value={s.id}>{s.name}</option>
-        ))}
+        {suppliers.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
       </select>
 
-      <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+      <div className="form-actions">
         <button type="submit">{editingMedicine ? 'Update' : 'Add'}</button>
         {editingMedicine && <button type="button" onClick={onCancel}>Cancel</button>}
       </div>

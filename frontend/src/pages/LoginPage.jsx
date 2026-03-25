@@ -19,10 +19,10 @@ const LoginPage = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '300px', margin: '50px auto' }}>
+    <form onSubmit={handleSubmit} style={{ width: 300, margin: '50px auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
       <h2>Login</h2>
-      <input placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
-      <input placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+      <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
+      <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
       <button type="submit">Login</button>
     </form>
   );

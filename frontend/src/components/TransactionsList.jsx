@@ -1,32 +1,26 @@
-import React from 'react';
+// src/components/TransactionList.jsx
+import React, { useContext } from 'react';
+import { TransactionsContext } from '../context/TransactionsContext';
+import { MedicinesContext } from '../context/MedicinesContext';
 
-const TransactionsList = ({ transactions }) => {
-  if (!transactions || transactions.length === 0) return <p>No transactions yet.</p>;
+const TransactionList = () => {
+  const { transactions } = useContext(TransactionsContext);
+  const { medicines } = useContext(MedicinesContext);
+
+  const getMedicineName = id => medicines.find(m => m.id === id)?.name || 'Unknown';
 
   return (
-    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-      <thead>
-        <tr>
-          <th>Medicine</th>
-          <th>Type</th>
-          <th>Quantity</th>
-          <th>Note</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {transactions.map(tx => (
-          <tr key={tx.id} style={{ borderBottom: '1px solid #ccc' }}>
-            <td>{tx.Medicine?.name || 'N/A'}</td>
-            <td>{tx.transaction_type}</td>
-            <td>{tx.quantity}</td>
-            <td>{tx.note || '-'}</td>
-            <td>{new Date(tx.createdAt).toLocaleString()}</td>
-          </tr>
+    <div style={{ padding: '20px' }}>
+      <h2>Transactions</h2>
+      <ul>
+        {transactions.map(t => (
+          <li key={t.id}>
+            {getMedicineName(t.medicineId)} - {t.type} - {t.quantity} units
+          </li>
         ))}
-      </tbody>
-    </table>
+      </ul>
+    </div>
   );
 };
 
-export default TransactionsList;
+export default TransactionList;

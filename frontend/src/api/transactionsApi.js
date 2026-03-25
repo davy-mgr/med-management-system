@@ -1,12 +1,21 @@
-import axios from 'axios';
-const API_URL = 'http://localhost:5000/transactions';
+import api from './axios';
 
-export const logTransaction = async (transaction, token) => {
-  const res = await axios.post(API_URL, transaction, { headers: { Authorization: token } });
+export const fetchTransactions = async () => {
+  const res = await api.get('/transactions');
   return res.data;
 };
 
-export const fetchTransactions = async (medicine_id, token) => {
-  const res = await axios.get(`${API_URL}?medicine_id=${medicine_id}`, { headers: { Authorization: token } });
+export const addTransaction = async (transaction) => {
+  const res = await api.post('/transactions', transaction);
+  return res.data;
+};
+
+export const updateTransaction = async (id, transaction) => {
+  const res = await api.put(`/transactions/${id}`, transaction);
+  return res.data;
+};
+
+export const deleteTransaction = async (id) => {
+  const res = await api.delete(`/transactions/${id}`);
   return res.data;
 };
