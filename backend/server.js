@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const sequelize = require('./config/db');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -28,3 +29,7 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
+sequelize.authenticate()
+  .then(() => console.log('DB connected ✅'))
+  .catch(err => console.error('DB connection error ❌', err));
