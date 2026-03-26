@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const sequelize = require('./config/db');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -16,6 +17,7 @@ app.use(cors({
 app.use('/users', require('./routes/usersRoutes'));
 app.use('/suppliers', require('./routes/supplierRoutes'));
 app.use('/medicines', require('./routes/medicineRoutes'));
+app.use('/auth', authRoutes);
 
 // Health check
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
