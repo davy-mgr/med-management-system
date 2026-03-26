@@ -27,8 +27,8 @@ const seedDatabase = async () => {
 
     // Medicines
     await Medicine.bulkCreate([
-      { name: 'Paracetamol', quantity: 100, threshold: 10, supplierId: 1 },
-      { name: 'Amoxicillin', quantity: 50, threshold: 5, supplierId: 2 }
+      { name: 'Paracetamol', quantity: 100, threshold: 10, supplier_id: 1 },
+      { name: 'Amoxicillin', quantity: 50, threshold: 5, supplier_id: 2 }
     ]);
 
     console.log('Seeding complete!');
