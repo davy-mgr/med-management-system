@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchTransactions, addTransaction, updateTransaction, deleteTransaction } from '../api/transactionApi';
+import { fetchTransactions, addTransaction, updateTransaction, deleteTransaction } from '../api/transactionsApi';
 
 const TransactionsPage = () => {
   const [transactions, setTransactions] = useState([]);

@@ -1,37 +1,43 @@
-// src/context/AuthContext.jsx
-import React, { createContext, useState, useEffect } from 'react';
+// src/context/AuthContext.js
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../api/axios';
-import { useNavigate } from 'react-router-dom';
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
     const token = localStorage.getItem('token');
-    if (storedUser && token) setUser(JSON.parse(storedUser));
+    if (token) {
+      api
+        .get('/auth/me', { headers: { Authorization: `Bearer ${token}` } })
+        .then((res) => setUser(res.data))
+        .catch(() => setUser(null))
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
   }, []);
 
-  const doLogin = async (email, password) => {
-    const res = await api.post('/users/login', { email, password });
+  const login = async (email, password) => {
+    const res = await api.post('/auth/login', { email, password });
     localStorage.setItem('token', res.data.token);
-    localStorage.setItem('user', JSON.stringify(res.data.user));
     setUser(res.data.user);
   };
 
-  const doLogout = () => {
+  const logout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
     setUser(null);
-    navigate('/login');
+    window.location.href = '/login';
   };
 
   return (
-    <AuthContext.Provider value={{ user, doLogin, doLogout }}>
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => useContext(AuthContext);

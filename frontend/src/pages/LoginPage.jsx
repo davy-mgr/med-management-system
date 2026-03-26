@@ -1,30 +1,57 @@
-import React, { useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+// src/pages/LoginPage.jsx
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth(); // ✅ useAuth hook instead of AuthContext
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { doLogin } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
     try {
-      await doLogin(email, password);
-      navigate('/medicines');
+      await login(email, password);
+      navigate('/medicines'); // redirect after successful login
     } catch (err) {
-      alert('Login failed. Check credentials.');
+      setError(err.response?.data?.message || 'Login failed');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ width: 300, margin: '50px auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
-      <h2>Login</h2>
-      <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
-      <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
-      <button type="submit">Login</button>
-    </form>
+    <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto' }}>
+      <h1>Login</h1>
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: '10px' }}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            style={{ width: '100%', padding: '8px' }}
+          />
+        </div>
+        <div style={{ marginBottom: '10px' }}>
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{ width: '100%', padding: '8px' }}
+          />
+        </div>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <button type="submit" style={{ padding: '10px 20px' }}>
+          Login
+        </button>
+      </form>
+    </div>
   );
 };
 

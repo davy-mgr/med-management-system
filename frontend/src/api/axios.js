@@ -1,11 +1,11 @@
+// src/api/axios.js
 import axios from 'axios';
 
-// ⚠️ CHANGE THIS in production
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://med-management-system.onrender.com';
+const baseURL =
+  import.meta.env.VITE_API_URL || 'https://med-management-system.onrender.com';
 
 const api = axios.create({
-  baseURL: BASE_URL,
-  withCredentials: true,
+  baseURL,
 });
 
 // Attach JWT to every request

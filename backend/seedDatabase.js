@@ -1,17 +1,22 @@
+// backend/seedDatabase.js
 const sequelize = require('./config/db');
 const User = require('./models/usersModel');
 const Supplier = require('./models/supplierModel');
 const Medicine = require('./models/medicineModel');
+const bcrypt = require('bcrypt');
 
 const seedDatabase = async () => {
   try {
     await sequelize.sync({ force: true });
     console.log('Database synced! All tables dropped and recreated.');
 
+    const adminPassword = await bcrypt.hash('admin123', 10);
+    const staffPassword = await bcrypt.hash('staff123', 10);
+
     // Users
     await User.bulkCreate([
-  { name: 'Admin', email: 'admin@example.com', password: 'hashedpassword', role: 'admin' },
-  { name: 'Staff1', email: 'staff1@example.com', password: 'hashedpassword', role: 'staff' }
+      { name: 'Admin', email: 'admin@example.com', password: adminPassword, role: 'admin' },
+      { name: 'Staff1', email: 'staff1@example.com', password: staffPassword, role: 'staff' }
     ]);
 
     // Suppliers
@@ -27,6 +32,9 @@ const seedDatabase = async () => {
     ]);
 
     console.log('Seeding complete!');
+    console.log('Admin → admin@example.com / admin123');
+    console.log('Staff → staff1@example.com / staff123');
+
     process.exit(0);
   } catch (err) {
     console.error('Error seeding database:', err);

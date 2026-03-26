@@ -1,30 +1,39 @@
+// src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, AuthContext } from './context/AuthContext';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import MedicinesPage from './pages/MedicinesPage';
 import SuppliersPage from './pages/SuppliersPage';
 import TransactionsPage from './pages/TransactionsPage';
+import { useAuth } from './context/AuthContext';
 
-const ProtectedRoute = ({ children }) => {
-  const { token } = React.useContext(AuthContext);
-  return token ? children : <Navigate to="/login" />;
-};
+const App = () => {
+  const { user, loading } = useAuth();
 
-function App() {
+  if (loading) return <div>Loading...</div>; // wait for auth check
+
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/medicines" element={<ProtectedRoute><MedicinesPage /></ProtectedRoute>} />
-          <Route path="/suppliers" element={<ProtectedRoute><SuppliersPage /></ProtectedRoute>} />
-          <Route path="/transactions" element={<ProtectedRoute><TransactionsPage /></ProtectedRoute>} />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <Routes>
+      <Route path="/login" element={user ? <Navigate to="/medicines" /> : <LoginPage />} />
+
+      {/* Protected routes */}
+      <Route
+        path="/medicines"
+        element={user ? <MedicinesPage /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/suppliers"
+        element={user ? <SuppliersPage /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/transactions"
+        element={user ? <TransactionsPage /> : <Navigate to="/login" />}
+      />
+
+      {/* Default redirect */}
+      <Route path="*" element={<Navigate to={user ? "/medicines" : "/login"} />} />
+    </Routes>
   );
-}
+};
 
 export default App;
