@@ -13,11 +13,14 @@ app.use(cors({
   credentials: true
 }));
 
+app.use(express.json());
+
 // Routes
 app.use('/users', require('./routes/usersRoutes'));
 app.use('/suppliers', require('./routes/supplierRoutes'));
 app.use('/medicines', require('./routes/medicineRoutes'));
 app.use('/auth', authRoutes);
+app.use(helmet());
 
 // Health check
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
