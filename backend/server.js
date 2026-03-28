@@ -20,10 +20,14 @@ app.use('/suppliers', supplierRoutes);
 app.use('/transactions', stockTransactionRoutes);
 app.use('/medicines', medicineRoutes);
 
-// Test DB connection before starting server
+
+// Test DB connection and sync models before starting server
 sequelize.authenticate()
-  .then(() => {
+  .then(async () => {
     console.log('DB connected ✅');
+    // TEMP: Sync all models to create missing tables (do not use force!)
+    await sequelize.sync();
+    console.log('DB synced (tables ensured)');
     app.listen(PORT, () => console.log(`Server running on port ${PORT} 🚀`));
   })
   .catch((err) => {
