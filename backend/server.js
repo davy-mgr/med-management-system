@@ -5,6 +5,7 @@ const sequelize = require('./config/db');
 
 const authRoutes = require('./routes/authRoutes');
 const supplierRoutes = require('./routes/supplierRoutes');
+const stockTransactionRoutes = require('./routes/stockTransactionRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,6 +16,7 @@ app.use(express.json());
 // Routes
 app.use('/auth', authRoutes);
 app.use('/suppliers', supplierRoutes);
+app.use('/transactions', stockTransactionRoutes);
 
 // Test DB connection before starting server
 sequelize.authenticate()
