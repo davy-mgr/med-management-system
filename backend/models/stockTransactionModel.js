@@ -1,8 +1,7 @@
-// backend/models/stockTransactionsModel.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const Medicine = require('./medicinesModel');
-const User = require('./usersModel');
+const Medicine = require('./medicineModel');
+const User = require('./userModel');
 
 const StockTransaction = sequelize.define('StockTransaction', {
   transaction_type: { type: DataTypes.STRING, allowNull: false }, // 'in' or 'out'

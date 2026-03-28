@@ -1,8 +1,10 @@
-// backend/routes/usersRoutes.js
+// backend/routes/authRoutes.js
 const express = require('express');
 const router = express.Router();
-const usersController = require('../controllers/usersController');
+const { login, getMe } = require('../controllers/authController'); // must match exports
+const { authMiddleware } = require('../middleware/auth');
 
-router.post('/login', usersController.login);
+router.post('/login', login);
+router.get('/me', authMiddleware, getMe);
 
 module.exports = router;

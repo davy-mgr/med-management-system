@@ -1,6 +1,6 @@
 // backend/seedDatabase.js
 const sequelize = require('./config/db');
-const User = require('./models/usersModel');
+const User = require('./models/userModel');
 const Supplier = require('./models/supplierModel');
 const Medicine = require('./models/medicineModel');
 const bcrypt = require('bcrypt');
