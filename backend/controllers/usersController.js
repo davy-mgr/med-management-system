@@ -2,8 +2,6 @@ const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-
-
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -29,5 +27,4 @@ const login = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-
 module.exports = { login };

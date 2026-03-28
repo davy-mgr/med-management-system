@@ -25,9 +25,6 @@ app.use('/medicines', medicineRoutes);
 sequelize.authenticate()
   .then(async () => {
     console.log('DB connected ✅');
-    // TEMP: Sync all models to create missing tables (do not use force!)
-    await sequelize.sync();
-    console.log('DB synced (tables ensured)');
     app.listen(PORT, () => console.log(`Server running on port ${PORT} 🚀`));
   })
   .catch((err) => {

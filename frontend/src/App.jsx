@@ -11,6 +11,7 @@ import ProfilePage from './pages/ProfilePage';
 import InventoryPage from './pages/InventoryPage';
 import ReportsPage from './pages/ReportsPage';
 import Navbar from './components/Navbar';
+import DarkModeToggle from './components/DarkModeToggle';
 import { SuppliersProvider } from './context/SuppliersContext';
 
 const PrivateRoute = ({ children }) => {
@@ -24,6 +25,7 @@ export default function App() {
     <AuthProvider>
       <SuppliersProvider>
         <BrowserRouter>
+          <DarkModeToggle />
           <Navbar />
           <Routes>
             <Route path="/login" element={<LoginPage />} />

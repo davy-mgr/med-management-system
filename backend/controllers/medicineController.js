@@ -1,6 +1,4 @@
 const Medicine = require('../models/medicineModel');
-
-
 const getAllMedicines = async (req, res) => {
   try {
     const medicines = await Medicine.findAll();
@@ -9,8 +7,6 @@ const getAllMedicines = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-
 const addMedicine = async (req, res) => {
   try {
     const { name, description, quantity } = req.body;
@@ -20,8 +16,6 @@ const addMedicine = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-
 const updateMedicine = async (req, res) => {
   try {
     const med = await Medicine.findByPk(req.params.id);
@@ -32,8 +26,6 @@ const updateMedicine = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-
 const deleteMedicine = async (req, res) => {
   try {
     const med = await Medicine.findByPk(req.params.id);
@@ -44,5 +36,4 @@ const deleteMedicine = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 module.exports = { getAllMedicines, addMedicine, updateMedicine, deleteMedicine };
