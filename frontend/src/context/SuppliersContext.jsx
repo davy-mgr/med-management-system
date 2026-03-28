@@ -4,6 +4,7 @@ import api from '../api/axios';
 
 export const SuppliersContext = createContext();
 
+
 export const SuppliersProvider = ({ children }) => {
   const [suppliers, setSuppliers] = useState([]);
 
@@ -15,6 +16,11 @@ export const SuppliersProvider = ({ children }) => {
       console.error('Error fetching suppliers:', err);
     }
   };
+
+  // Fetch suppliers on mount
+  React.useEffect(() => {
+    fetchSuppliers();
+  }, []);
 
   const addSupplier = async (supplier) => {
     try {

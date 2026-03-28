@@ -45,9 +45,10 @@ const TransactionsPage = () => {
       </form>
       <ul>
         {transactions.map(t => (
-          <li key={t.id}>{t.medicine_id} - {t.type} - {t.quantity} 
-            <button onClick={() => handleEdit(t)}>Edit</button> 
-            <button onClick={() => handleDelete(t.id)}>Delete</button>
+          <li key={t.id}>
+            {t.medicine_id} - {t.type} - {t.quantity}
+            <button style={{ marginLeft: 8, marginRight: 4 }} onClick={() => handleEdit(t)}>Edit</button>
+            <button style={{ marginLeft: 4 }} onClick={() => handleDelete(t.id)}>Delete</button>
           </li>
         ))}
       </ul>

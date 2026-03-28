@@ -41,9 +41,9 @@ export default function MedicinesPage() {
       <ul>
         {medicines.map(m => (
           <li key={m.id}>
-            {m.name} ({m.quantity}) 
-            <button onClick={() => setEditing(m)}>Edit</button>
-            <button onClick={() => handleDelete(m.id)}>Delete</button>
+            {m.name} ({m.quantity})
+            <button style={{ marginLeft: 8, marginRight: 4 }} onClick={() => setEditing(m)}>Edit</button>
+            <button style={{ marginLeft: 4 }} onClick={() => handleDelete(m.id)}>Delete</button>
           </li>
         ))}
       </ul>

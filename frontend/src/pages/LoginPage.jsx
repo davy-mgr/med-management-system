@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/axios';
@@ -33,6 +34,9 @@ export default function LoginPage() {
         <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} />
         <button type="submit">Login</button>
       </form>
+      <button style={{ marginTop: 16 }} onClick={() => navigate('/signup')}>
+        Don't have an account? Sign up
+      </button>
     </div>
   );
 }

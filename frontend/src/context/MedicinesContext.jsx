@@ -4,6 +4,7 @@ import api from '../api/axios';
 
 export const MedicinesContext = createContext();
 
+
 export const MedicinesProvider = ({ children }) => {
   const [medicines, setMedicines] = useState([]);
 
@@ -15,6 +16,11 @@ export const MedicinesProvider = ({ children }) => {
       console.error('Error fetching medicines:', err);
     }
   };
+
+  // Fetch medicines on mount
+  React.useEffect(() => {
+    fetchMedicines();
+  }, []);
 
   const addMedicine = async (medicine) => {
     try {

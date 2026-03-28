@@ -9,7 +9,7 @@ export default function Navbar() {
   };
   return (
     <nav className="navbar">
-      <div className="navbar-logo">Med Management</div>
+      <div className="navbar-logo">Track-Drug</div>
       {user && (
         <ul className="navbar-links">
           <li><Link to="/dashboard">Dashboard</Link></li>
