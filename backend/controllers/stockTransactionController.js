@@ -6,6 +6,7 @@ const addTransaction = async (req, res) => {
     const transaction = await logTransaction(medicine_id, req.user.id, quantity_change, type);
     res.status(201).json(transaction);
   } catch (err) {
+    console.error('Error in addTransaction:', err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -16,6 +17,7 @@ const listTransactions = async (req, res) => {
     const transactions = await getTransactionsByMedicine(medicine_id);
     res.json(transactions);
   } catch (err) {
+    console.error('Error in listTransactions:', err);
     res.status(500).json({ error: err.message });
   }
 };
