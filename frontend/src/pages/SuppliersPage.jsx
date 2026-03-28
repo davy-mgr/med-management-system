@@ -17,7 +17,7 @@ export default function SuppliersPage() {
         </thead>
         <tbody>
           {suppliers.length === 0 ? (
-            <tr><td colSpan={4} style={{ textAlign: 'center', color: '#888' }}>No suppliers found.</td></tr>
+            <tr><td colSpan={4} style={{ textAlign: 'center', color: 'rgb(255, 255, 255)' }}>No suppliers found.</td></tr>
           ) : (
             suppliers.map(s => (
               <tr key={s.id}>
