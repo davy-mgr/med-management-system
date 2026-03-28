@@ -1,4 +1,3 @@
-// src/context/TransactionsContext.jsx
 import React, { createContext, useState } from 'react';
 import api from '../api/axios';
 

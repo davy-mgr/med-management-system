@@ -1,4 +1,3 @@
-// src/context/MedicinesContext.jsx
 import React, { createContext, useState } from 'react';
 import api from '../api/axios';
 
@@ -17,7 +16,6 @@ export const MedicinesProvider = ({ children }) => {
     }
   };
 
-  // Fetch medicines on mount
   React.useEffect(() => {
     fetchMedicines();
   }, []);

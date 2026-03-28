@@ -1,4 +1,3 @@
-// src/components/MedicineList.jsx
 import React, { useContext } from 'react';
 import { MedicinesContext } from '../context/MedicinesContext';
 

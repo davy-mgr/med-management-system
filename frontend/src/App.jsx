@@ -10,7 +10,6 @@ import ProfilePage from './pages/ProfilePage';
 import InventoryPage from './pages/InventoryPage';
 import ReportsPage from './pages/ReportsPage';
 import Navbar from './components/Navbar';
-// import DarkModeToggle from './components/DarkModeToggle';
 import { SuppliersProvider } from './context/SuppliersContext';
 import { MedicinesProvider } from './context/MedicinesContext';
 import { TransactionsProvider } from './context/TransactionsContext';
@@ -23,7 +22,6 @@ const PrivateRoute = ({ children }) => {
 
 
 export default function App() {
-  // Always enable dark mode
   useEffect(() => {
     document.body.classList.add('dark-mode');
     return () => document.body.classList.remove('dark-mode');
@@ -34,7 +32,6 @@ export default function App() {
         <MedicinesProvider>
           <TransactionsProvider>
             <BrowserRouter>
-              {/* DarkModeToggle removed, site always in dark mode */}
               <Navbar />
               <Routes>
                 <Route path="/login" element={<LoginPageRedirect />} />

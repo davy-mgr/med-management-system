@@ -1,4 +1,3 @@
-// src/components/TransactionsForm.jsx
 import React, { useState, useContext } from 'react';
 import { TransactionsContext } from '../context/TransactionsContext';
 import { MedicinesContext } from '../context/MedicinesContext';
@@ -10,7 +9,7 @@ const TransactionsForm = () => {
   const [formData, setFormData] = useState({
     medicineId: '',
     quantity: 0,
-    type: 'sale' // or 'purchase'
+    type: 'sale'
   });
 
   const handleSubmit = async (e) => {

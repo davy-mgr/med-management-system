@@ -14,19 +14,17 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Routes
 app.use('/auth', authRoutes);
 app.use('/suppliers', supplierRoutes);
 app.use('/transactions', stockTransactionRoutes);
 app.use('/medicines', medicineRoutes);
 
 
-// Test DB connection and sync models before starting server
 sequelize.authenticate()
   .then(async () => {
     console.log('DB connected ✅');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT} 🚀`));
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch((err) => {
-    console.error('DB connection error ❌', err);
+    console.error('DB connection error', err);
   });

@@ -1,5 +1,4 @@
 require('dotenv').config();
-// backend/seedDatabase.js
 const sequelize = require('./config/db');
 const User = require('./models/userModel');
 const Supplier = require('./models/supplierModel');

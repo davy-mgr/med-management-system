@@ -1,4 +1,3 @@
-// src/context/SuppliersContext.jsx
 import React, { createContext, useState } from 'react';
 import api from '../api/axios';
 
@@ -17,8 +16,7 @@ export const SuppliersProvider = ({ children }) => {
     }
   };
 
-  // Fetch suppliers on mount
-  React.useEffect(() => {
+    React.useEffect(() => {
     fetchSuppliers();
   }, []);
 

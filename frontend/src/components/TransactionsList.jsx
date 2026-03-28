@@ -1,4 +1,3 @@
-// src/components/TransactionList.jsx
 import React, { useContext } from 'react';
 import { TransactionsContext } from '../context/TransactionsContext';
 import { MedicinesContext } from '../context/MedicinesContext';
