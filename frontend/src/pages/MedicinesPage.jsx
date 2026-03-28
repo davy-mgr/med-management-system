@@ -1,45 +1,52 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import API from '../api/axios';
 import MedicineForm from '../components/MedicineForm';
-import MedicineList from '../components/MedicineList';
-import { fetchMedicines, addMedicine, updateMedicine, deleteMedicine } from '../api/medicineApi';
 
-const MedicinesPage = () => {
+export default function MedicinesPage() {
   const [medicines, setMedicines] = useState([]);
-  const [editingMedicine, setEditingMedicine] = useState(null);
+  const [editing, setEditing] = useState(null);
 
   const loadMedicines = async () => {
-    const data = await fetchMedicines();
-    setMedicines(data);
+    try {
+      const res = await API.get('/medicines');
+      setMedicines(res.data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => { loadMedicines(); }, []);
 
-  const handleSave = async (medicine) => {
-    if (editingMedicine) {
-      await updateMedicine(editingMedicine.id, medicine);
-      setEditingMedicine(null);
-    } else {
-      await addMedicine(medicine);
-    }
-    loadMedicines();
+  const handleSave = async med => {
+    try {
+      if (editing) {
+        await API.put(`/medicines/${editing.id}`, med);
+      } else {
+        await API.post('/medicines', med);
+      }
+      setEditing(null);
+      loadMedicines();
+    } catch (err) { console.error(err); }
   };
 
-  const handleEdit = (medicine) => setEditingMedicine(medicine);
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Delete this medicine?')) {
-      await deleteMedicine(id);
-      loadMedicines();
-    }
+  const handleDelete = async id => {
+    if (!window.confirm('Delete this medicine?')) return;
+    try { await API.delete(`/medicines/${id}`); loadMedicines(); } catch (err) { console.error(err); }
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Medicines</h1>
-      <MedicineForm onSave={handleSave} editingMedicine={editingMedicine} onCancel={() => setEditingMedicine(null)} />
-      <MedicineList medicines={medicines} onEdit={handleEdit} onDelete={handleDelete} />
+    <div>
+      <h2>Medicines</h2>
+      <MedicineForm onSave={handleSave} editingMedicine={editing} onCancel={() => setEditing(null)} />
+      <ul>
+        {medicines.map(m => (
+          <li key={m.id}>
+            {m.name} ({m.quantity}) 
+            <button onClick={() => setEditing(m)}>Edit</button>
+            <button onClick={() => handleDelete(m.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
-};
-
-export default MedicinesPage;
+}
