@@ -13,14 +13,16 @@ export const getInventory = async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM medicines ORDER BY name ASC");
     res.json(result.rows);
-  } catch {
-    res.status(500).json({ error: "Internal server error" });
+  } catch (err) {
+    console.error("Error fetching inventory:", err);
+    res.status(500).json({ error: "Internal server error. Database connection might be failing." });
   }
 };
 
 export const createMedicine = async (req, res) => {
-  const client = await pool.connect();
+  let client;
   try {
+    client = await pool.connect();
     const { name, quantity, min_threshold, batch, expiry } = medicineSchema.parse(req.body);
     await client.query("BEGIN");
     
@@ -43,9 +45,10 @@ export const createMedicine = async (req, res) => {
   } catch (err) {
     if (client) await client.query("ROLLBACK");
     if (err instanceof z.ZodError) return res.status(400).json({ error: err.issues[0].message });
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Error creating medicine:", err);
+    res.status(500).json({ error: "Internal server error. Database connection might be failing." });
   } finally {
-    client.release();
+    if (client) client.release();
   }
 };
 
@@ -61,6 +64,7 @@ export const updateMedicine = async (req, res) => {
     res.json(result.rows[0]);
   } catch (err) {
     if (err instanceof z.ZodError) return res.status(400).json({ error: err.issues[0].message });
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Error updating medicine:", err);
+    res.status(500).json({ error: "Internal server error. Database connection might be failing." });
   }
 };

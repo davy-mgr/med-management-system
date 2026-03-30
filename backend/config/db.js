@@ -8,7 +8,9 @@ const { Pool } = pg;
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL || "postgresql://med_management_user:6CXK40tkXdR8kxtT9oHVQ7emnqtr9fun@dpg-d72i120ule4c73e5sc5g-a.oregon-postgres.render.com/med_management",
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false },
+  connectionTimeoutMillis: 5000, // 5 seconds timeout
+  idleTimeoutMillis: 30000, // 30 seconds idle timeout
 });
 
 // Test connection on startup

@@ -31,6 +31,12 @@ async function startServer() {
   app.use("/api/transactions", transactionRoutes);
   app.use("/api/users", userRoutes);
 
+  // Global Error Handler
+  app.use((err, req, res, next) => {
+    console.error("Global Error Handler:", err);
+    res.status(500).json({ error: "Internal server error. " + (err.message || "") });
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

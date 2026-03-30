@@ -18,16 +18,18 @@ export const getTransactions = async (req, res) => {
       ORDER BY t.date DESC
     `);
     res.json(result.rows);
-  } catch {
-    res.status(500).json({ error: "Internal server error" });
+  } catch (err) {
+    console.error("Error fetching transactions:", err);
+    res.status(500).json({ error: "Internal server error. Database connection might be failing." });
   }
 };
 
 export const createTransaction = async (req, res) => {
+  let client;
   try {
     const { drug_id, type, quantity, notes } = transactionSchema.parse(req.body);
     const user_id = req.user.id;
-    const client = await pool.connect();
+    client = await pool.connect();
     try {
       await client.query("BEGIN");
       
@@ -52,13 +54,14 @@ export const createTransaction = async (req, res) => {
       await client.query("COMMIT");
       res.status(201).json(transResult.rows[0]);
     } catch (err) {
-      await client.query("ROLLBACK");
+      if (client) await client.query("ROLLBACK");
       throw err;
     } finally {
-      client.release();
+      if (client) client.release();
     }
   } catch (err) {
     if (err instanceof z.ZodError) return res.status(400).json({ error: err.issues[0].message });
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Error creating transaction:", err);
+    res.status(500).json({ error: "Internal server error. Database connection might be failing." });
   }
 };
