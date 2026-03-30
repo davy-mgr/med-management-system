@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { Package, AlertTriangle, TrendingUp, Users, TrendingDown } from 'lucide-react';
-import { StatCard } from '../components/StatCard';
+import { StatCard } from '../components/StatCard.jsx';
 
 export default function DashboardPage({ inventory, transactions, usersCount, onViewHistory }) {
   const lowStockItems = inventory.filter(item => item.quantity <= item.min_threshold);

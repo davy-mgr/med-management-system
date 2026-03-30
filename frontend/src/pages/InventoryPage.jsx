@@ -61,7 +61,7 @@ export default function InventoryPage({ inventory, userRole, onUpdateStock, onAd
             </thead>
             <tbody className="divide-y divide-slate-800">
               {inventory.map((item) => (
-                <tr key={item.id} className="table-row">
+                <tr key={item.id} className="table-row group">
                   <td className="table-cell">
                     <p className="font-bold text-white">{item.name}</p>
                     <p className="text-[10px] text-slate-500 font-mono">ID: MM-{item.id.toString().padStart(4, '0')}</p>
