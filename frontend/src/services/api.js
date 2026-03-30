@@ -12,7 +12,7 @@ export const api = {
     if (!res.ok) {
       try {
         throw await res.json();
-      } catch (e) {
+      } catch {
         throw { error: `Server error: ${res.status} ${res.statusText}` };
       }
     }
@@ -27,7 +27,7 @@ export const api = {
     if (!res.ok) {
       try {
         throw await res.json();
-      } catch (e) {
+      } catch {
         throw { error: `Server error: ${res.status} ${res.statusText}` };
       }
     }
@@ -42,7 +42,7 @@ export const api = {
     if (!res.ok) {
       try {
         throw await res.json();
-      } catch (e) {
+      } catch {
         throw { error: `Server error: ${res.status} ${res.statusText}` };
       }
     }

@@ -1,5 +1,4 @@
 import express from "express";
-import { createServer as createViteServer } from "vite";
 import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
@@ -32,13 +31,14 @@ async function startServer() {
   app.use("/api/users", userRoutes);
 
   // Global Error Handler
-  app.use((err, req, res, next) => {
+  app.use((err, req, res, _next) => {
     console.error("Global Error Handler:", err);
     res.status(500).json({ error: "Internal server error. " + (err.message || "") });
   });
 
   // Vite middleware for development
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV !== "production" && process.env.VERCEL !== "1") {
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
