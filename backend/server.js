@@ -4,7 +4,6 @@ import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import { initDb } from "./config/db.js";
 
-// Routes
 import authRoutes from "./routes/authRoutes.js";
 import medicineRoutes from "./routes/medicineRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
@@ -19,24 +18,20 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  // Initialize Database
   await initDb();
 
   app.use(express.json());
 
-  // API Routes
   app.use("/api/auth", authRoutes);
   app.use("/api/inventory", medicineRoutes);
   app.use("/api/transactions", transactionRoutes);
   app.use("/api/users", userRoutes);
 
-  // Global Error Handler
   app.use((err, req, res, _next) => {
     console.error("Global Error Handler:", err);
     res.status(500).json({ error: "Internal server error. " + (err.message || "") });
   });
 
-  // Vite middleware for development
   if (process.env.NODE_ENV !== "production" && process.env.VERCEL !== "1") {
     const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
@@ -52,7 +47,6 @@ async function startServer() {
     });
   }
 
-  // Only listen if not running on Vercel
   if (process.env.VERCEL !== "1") {
     app.listen(PORT, "0.0.0.0", () => {
       console.log(`Server running on http://localhost:${PORT}`);

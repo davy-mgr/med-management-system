@@ -33,13 +33,11 @@ export const createTransaction = async (req, res) => {
     try {
       await client.query("BEGIN");
       
-      // Record transaction
       const transResult = await client.query(
         "INSERT INTO transactions (drug_id, user_id, type, quantity, notes) VALUES ($1, $2, $3, $4, $5) RETURNING *",
         [drug_id, user_id, type, quantity, notes]
       );
 
-      // Update inventory
       const updateQuery = type === 'addition' 
         ? "UPDATE medicines SET quantity = quantity + $1 WHERE id = $2 RETURNING *"
         : "UPDATE medicines SET quantity = quantity - $1 WHERE id = $2 RETURNING *";

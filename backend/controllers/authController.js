@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { z } from "zod";
 import pool from "../config/db.js";
 
-const JWT_SECRET = process.env.JWT_SECRET || "track-drug-secret-key";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const signupSchema = z.object({
   name: z.string().min(2),

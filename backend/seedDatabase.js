@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 export async function seedData(client) {
   console.log("Checking database for initial data...");
 
-  // Seed Users if they don't exist
   const adminCheck = await client.query("SELECT id FROM users WHERE email = $1", ["admin@trackdrug.com"]);
   if (adminCheck.rows.length === 0) {
     console.log("Seeding admin user...");
@@ -24,7 +23,6 @@ export async function seedData(client) {
     );
   }
 
-  // Check if medicines already exist
   const medCount = await client.query("SELECT COUNT(*) FROM medicines");
   if (parseInt(medCount.rows[0].count) > 0) {
     console.log("Medicines already exist, skipping medicine seed.");
@@ -36,7 +34,6 @@ export async function seedData(client) {
   const adminId = adminRes.rows[0].id;
   const staffId = staffRes.rows[0].id;
 
-  // Seed Medicines
   const medicines = [
     ["Paracetamol 500mg", 500, 50, "BATCH-001", "2027-12-31"],
     ["Amoxicillin 250mg", 120, 30, "BATCH-002", "2026-06-15"],
@@ -58,14 +55,12 @@ export async function seedData(client) {
     
     const drugId = res.rows[0].id;
 
-    // Seed initial transaction for each medicine
     await client.query(
       "INSERT INTO transactions (drug_id, user_id, type, quantity, notes) VALUES ($1, $2, $3, $4, $5)",
       [drugId, adminId, "addition", qty, "Initial stock intake"]
     );
   }
 
-  // Add some usage transactions
   const usageTransactions = [
     [1, staffId, "usage", 20, "Patient prescription"],
     [2, staffId, "usage", 15, "Emergency ward use"],

@@ -57,7 +57,6 @@ export const updateMedicine = async (req, res) => {
   try {
     const validatedData = medicineSchema.partial().parse(req.body);
     
-    // Build dynamic update query to avoid COALESCE issues with undefined
     const updates = [];
     const values = [];
     let paramIdx = 1;
@@ -66,9 +65,6 @@ export const updateMedicine = async (req, res) => {
     fields.forEach(field => {
       if (validatedData[field] !== undefined) {
         updates.push(`${field} = $${paramIdx}`);
-        // Convert empty strings to null for batch and expiry if desired, 
-        // but here we'll just pass the value. 
-        // For DATE type, empty string should be null.
         let val = validatedData[field];
         if ((field === 'batch' || field === 'expiry') && val === '') {
           val = null;
