@@ -55,11 +55,38 @@ export const createMedicine = async (req, res) => {
 export const updateMedicine = async (req, res) => {
   const { id } = req.params;
   try {
-    const { name, min_threshold, batch, expiry } = medicineSchema.partial().parse(req.body);
-    const result = await pool.query(
-      "UPDATE medicines SET name = COALESCE($1, name), min_threshold = COALESCE($2, min_threshold), batch = COALESCE($3, batch), expiry = COALESCE($4, expiry) WHERE id = $5 RETURNING *",
-      [name, min_threshold, batch, expiry, id]
-    );
+    const validatedData = medicineSchema.partial().parse(req.body);
+    
+    // Build dynamic update query to avoid COALESCE issues with undefined
+    const updates = [];
+    const values = [];
+    let paramIdx = 1;
+
+    const fields = ['name', 'min_threshold', 'batch', 'expiry'];
+    fields.forEach(field => {
+      if (validatedData[field] !== undefined) {
+        updates.push(`${field} = $${paramIdx}`);
+        // Convert empty strings to null for batch and expiry if desired, 
+        // but here we'll just pass the value. 
+        // For DATE type, empty string should be null.
+        let val = validatedData[field];
+        if ((field === 'batch' || field === 'expiry') && val === '') {
+          val = null;
+        }
+        values.push(val);
+        paramIdx++;
+      }
+    });
+
+    if (updates.length === 0) {
+      return res.status(400).json({ error: "No valid fields provided for update" });
+    }
+
+    values.push(id);
+    const query = `UPDATE medicines SET ${updates.join(', ')} WHERE id = $${paramIdx} RETURNING *`;
+    
+    const result = await pool.query(query, values);
+    
     if (result.rowCount === 0) return res.status(404).json({ error: "Medicine not found" });
     res.json(result.rows[0]);
   } catch (err) {
