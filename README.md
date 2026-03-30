@@ -48,5 +48,7 @@ This is a full-stack application built with React (Frontend) and Node.js/Express
 - **Inventory Management**: Track stock levels, batch numbers, and expiry dates.
 - **Low Stock Alerts**: Visual indicators for items below threshold.
 - **Transaction History**: Audit log of all stock additions and usage.
+- **User Management**: Manage system users and access rights.
 - **Dashboard**: High-level overview of facility health.
 - **Responsive Design**: Works on desktops, tablets, and mobile devices.
+- **Data Backup & Recovery**: All inventory data is automatically stored in the database.
