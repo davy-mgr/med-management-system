@@ -1,30 +1,50 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const sequelize = require('./config/db');
+import express from "express";
+import { createServer as createViteServer } from "vite";
+import path from "path";
+import dotenv from "dotenv";
+import { initDb } from "./config/db.js";
 
-const authRoutes = require('./routes/authRoutes');
-const supplierRoutes = require('./routes/supplierRoutes');
-const stockTransactionRoutes = require('./routes/stockTransactionRoutes');
-const medicineRoutes = require('./routes/medicineRoutes');
+// Routes
+import authRoutes from "./routes/authRoutes.js";
+import medicineRoutes from "./routes/medicineRoutes.js";
+import transactionRoutes from "./routes/transactionRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+dotenv.config();
 
-app.use(cors());
-app.use(express.json());
+async function startServer() {
+  const app = express();
+  const PORT = 3000;
 
-app.use('/auth', authRoutes);
-app.use('/suppliers', supplierRoutes);
-app.use('/transactions', stockTransactionRoutes);
-app.use('/medicines', medicineRoutes);
+  // Initialize Database
+  await initDb();
 
+  app.use(express.json());
 
-sequelize.authenticate()
-  .then(async () => {
-    console.log('DB connected ✅');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  })
-  .catch((err) => {
-    console.error('DB connection error', err);
+  // API Routes
+  app.use("/api/auth", authRoutes);
+  app.use("/api/inventory", medicineRoutes);
+  app.use("/api/transactions", transactionRoutes);
+  app.use("/api/users", userRoutes);
+
+  // Vite middleware for development
+  if (process.env.NODE_ENV !== "production") {
+    const vite = await createViteServer({
+      server: { middlewareMode: true },
+      appType: "spa",
+    });
+    app.use(vite.middlewares);
+  } else {
+    const distPath = path.join(process.cwd(), "dist");
+    app.use(express.static(distPath));
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(distPath, "index.html"));
+    });
+  }
+
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on http://localhost:${PORT}`);
   });
+}
+
+startServer();

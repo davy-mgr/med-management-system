@@ -1,11 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const { addMedicine, getAllMedicines, updateMedicine, deleteMedicine } = require('../controllers/medicineController');
-const { authMiddleware, adminMiddleware } = require('../middleware/auth');
+import { Router } from "express";
+import { getInventory, createMedicine, updateMedicine } from "../controllers/medicineController.js";
+import { authenticateToken, isAdmin } from "../middleware/auth.js";
 
-router.post('/', authMiddleware, adminMiddleware, addMedicine);
-router.get('/', authMiddleware, getAllMedicines);
-router.patch('/:id', authMiddleware, adminMiddleware, updateMedicine);
-router.delete('/:id', authMiddleware, adminMiddleware, deleteMedicine);
+const router = Router();
 
-module.exports = router;
+router.get("/", authenticateToken, getInventory);
+router.post("/", authenticateToken, isAdmin, createMedicine);
+router.patch("/:id", authenticateToken, updateMedicine);
+
+export default router;
