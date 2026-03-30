@@ -2,46 +2,98 @@
 
 This is a full-stack application built with React (Frontend) and Node.js/Express (Backend).
 
-## Project Structure
+## Tech Stack
+- **Frontend**: React, Vite, Tailwind CSS, Lucide Icons, Framer Motion
+- **Backend**: Node.js, Express, PostgreSQL
+- **Authentication**: JWT (JSON Web Tokens), Bcryptjs
+- **Validation**: Zod
 
-- `server.ts`: The Express server that handles API requests and serves the frontend.
-- `src/`: React frontend source code.
-- `package.json`: Project dependencies and scripts.
-- `vite.config.ts`: Vite configuration for the frontend.
+---
 
-## How to Run Locally (VS Code)
+## Local Setup
 
-1. **Install Dependencies**:
-   Open your terminal in VS Code and run:
-   ```bash
-   npm install
-   ```
+### 1. Clone the Repository
+```bash
+git clone <your-repo-url>
+cd <your-repo-name>
+```
 
-2. **Start Development Server**:
-   Run the following command to start both the backend and frontend (via Vite middleware):
-   ```bash
-   npm run dev
-   ```
-   The app will be available at `http://localhost:3000`.
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-3. **Build for Production**:
-   To create a production build:
-   ```bash
-   npm run build
-   ```
-   The static files will be generated in the `dist/` folder.
+### 3. Environment Variables
+Create a `.env` file in the root directory and add the following:
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/med_db
+JWT_SECRET=your_super_secret_key
+```
+
+### 4. Run the Application
+```bash
+npm run dev
+```
+The application will be available at `http://localhost:3000`.
+
+---
 
 ## Deployment
 
-### Render (Backend)
-- Connect your GitHub repository to Render.
-- Select **Web Service**.
-- Build Command: `npm install && npm run build`
-- Start Command: `node server.ts` (Ensure `NODE_ENV` is set to `production`)
+### 1. Database Setup
+This application requires a PostgreSQL database. You can use services like:
+- **Render (PostgreSQL)**: Free tier available.
+- **Supabase**: Managed PostgreSQL.
+- **Neon**: Serverless PostgreSQL.
 
-### Vercel (Frontend)
-- If you want to deploy the frontend separately to Vercel, you can connect the repo and set the build command to `npm run build` and output directory to `dist`.
-- Note: You will need to update the API fetch URLs in `src/App.tsx` to point to your Render backend URL if deployed separately.
+Once you have your database, copy the **Connection String** (e.g., `postgresql://...`).
+
+### 2. Deploy on Render (Full-Stack)
+Render is great for hosting both the backend and the database.
+
+1.  **Create a New Web Service** on Render.
+2.  **Connect your GitHub repository**.
+3.  **Configure the Service**:
+    -   **Environment**: `Node`
+    -   **Build Command**: `npm install && npm run build`
+    -   **Start Command**: `npm start`
+4.  **Add Environment Variables**:
+    -   `DATABASE_URL`: (Your PostgreSQL connection string)
+    -   `JWT_SECRET`: (A random secret string)
+    -   `NODE_ENV`: `production`
+
+### 3. Deploy on Vercel
+Vercel is optimized for frontend and serverless functions.
+
+1.  **Import your project** to Vercel.
+2.  **Configure the Project**:
+    -   **Framework Preset**: `Vite`
+    -   **Build Command**: `npm run build`
+    -   **Output Directory**: `dist`
+3.  **Add Environment Variables**:
+    -   `DATABASE_URL`: (Your PostgreSQL connection string)
+    -   `JWT_SECRET`: (A random secret string)
+    -   `VERCEL`: `1` (This tells the server to skip the standard `app.listen()` call)
+4.  **Deploy**.
+
+---
+
+## Database Connection Details
+The application uses the `pg` library to connect to PostgreSQL.
+
+- **SSL**: The application is configured to use `ssl: { rejectUnauthorized: false }`, which is required by most cloud providers like Render and Neon.
+- **Initialization**: On the first run, the application will automatically create the necessary tables (`users`, `medicines`, `transactions`) and seed initial data if the database is empty.
+
+## .env Template
+```env
+# DATABASE_URL: PostgreSQL connection string.
+# Example: postgresql://user:password@localhost:5432/med_db
+DATABASE_URL=
+
+# JWT_SECRET: Secret key for JWT signing.
+# Use a long, random string.
+JWT_SECRET=
+```
 
 ## Features
 
