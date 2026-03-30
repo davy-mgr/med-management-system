@@ -11,46 +11,57 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
+// Test connection on startup
+pool.on('error', (err) => {
+  console.error('Unexpected error on idle client', err);
+});
+
 export async function initDb() {
-  const client = await pool.connect();
+  console.log("Attempting to connect to database...");
   try {
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        role TEXT DEFAULT 'staff' CHECK (role IN ('admin', 'staff', 'auditor')),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
+    const client = await pool.connect();
+    console.log("Connected to database successfully");
+    try {
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS users (
+          id SERIAL PRIMARY KEY,
+          name TEXT NOT NULL,
+          email TEXT UNIQUE NOT NULL,
+          password TEXT NOT NULL,
+          role TEXT DEFAULT 'staff' CHECK (role IN ('admin', 'staff', 'auditor')),
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
 
-      CREATE TABLE IF NOT EXISTS medicines (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        quantity INTEGER DEFAULT 0,
-        min_threshold INTEGER DEFAULT 10,
-        batch TEXT,
-        expiry DATE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
+        CREATE TABLE IF NOT EXISTS medicines (
+          id SERIAL PRIMARY KEY,
+          name TEXT NOT NULL,
+          quantity INTEGER DEFAULT 0,
+          min_threshold INTEGER DEFAULT 10,
+          batch TEXT,
+          expiry DATE,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
 
-      CREATE TABLE IF NOT EXISTS transactions (
-        id SERIAL PRIMARY KEY,
-        drug_id INTEGER REFERENCES medicines(id),
-        user_id INTEGER REFERENCES users(id),
-        type TEXT CHECK (type IN ('addition', 'usage')),
-        quantity INTEGER NOT NULL,
-        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        notes TEXT
-      );
-    `);
-    console.log("Database tables initialized");
-    
-    await seedData(client);
+        CREATE TABLE IF NOT EXISTS transactions (
+          id SERIAL PRIMARY KEY,
+          drug_id INTEGER REFERENCES medicines(id),
+          user_id INTEGER REFERENCES users(id),
+          type TEXT CHECK (type IN ('addition', 'usage')),
+          quantity INTEGER NOT NULL,
+          date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          notes TEXT
+        );
+      `);
+      console.log("Database tables initialized");
+      
+      await seedData(client);
+    } catch (err) {
+      console.error("Error running initialization queries:", err);
+    } finally {
+      client.release();
+    }
   } catch (err) {
-    console.error("Error initializing database:", err);
-  } finally {
-    client.release();
+    console.error("CRITICAL: Failed to connect to database. Check your DATABASE_URL environment variable.", err.message);
   }
 }
 

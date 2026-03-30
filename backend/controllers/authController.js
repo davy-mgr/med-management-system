@@ -31,7 +31,8 @@ export const signup = async (req, res) => {
   } catch (err) {
     if (err instanceof z.ZodError) return res.status(400).json({ error: err.issues[0].message });
     if (err.code === '23505') return res.status(400).json({ error: "Email already exists" });
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Signup error:", err);
+    res.status(500).json({ error: "Internal server error. Database connection might be failing." });
   }
 };
 
@@ -47,6 +48,7 @@ export const login = async (req, res) => {
     res.json({ user: { id: user.id, name: user.name, email: user.email, role: user.role }, token });
   } catch (err) {
     if (err instanceof z.ZodError) return res.status(400).json({ error: err.issues[0].message });
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Login error:", err);
+    res.status(500).json({ error: "Internal server error. Database connection might be failing." });
   }
 };

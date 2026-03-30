@@ -9,7 +9,13 @@ const getHeaders = () => {
 export const api = {
   async get(url) {
     const res = await fetch(url, { headers: getHeaders() });
-    if (!res.ok) throw await res.json();
+    if (!res.ok) {
+      try {
+        throw await res.json();
+      } catch (e) {
+        throw { error: `Server error: ${res.status} ${res.statusText}` };
+      }
+    }
     return res.json();
   },
   async post(url, body) {
@@ -18,7 +24,13 @@ export const api = {
       headers: getHeaders(),
       body: JSON.stringify(body)
     });
-    if (!res.ok) throw await res.json();
+    if (!res.ok) {
+      try {
+        throw await res.json();
+      } catch (e) {
+        throw { error: `Server error: ${res.status} ${res.statusText}` };
+      }
+    }
     return res.json();
   },
   async patch(url, body) {
@@ -27,7 +39,13 @@ export const api = {
       headers: getHeaders(),
       body: JSON.stringify(body)
     });
-    if (!res.ok) throw await res.json();
+    if (!res.ok) {
+      try {
+        throw await res.json();
+      } catch (e) {
+        throw { error: `Server error: ${res.status} ${res.statusText}` };
+      }
+    }
     return res.json();
   }
 };
