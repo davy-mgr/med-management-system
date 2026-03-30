@@ -103,6 +103,15 @@ export default function App() {
     }
   };
 
+  const handleUpdateMedicine = async (id, data) => {
+    try {
+      await api.patch(`/api/inventory/${id}`, data);
+      fetchData();
+    } catch (error) {
+      alert(error.error || "Update failed");
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
@@ -212,6 +221,7 @@ export default function App() {
                 await api.post('/api/inventory', data);
                 fetchData();
               }}
+              onUpdateMedicine={handleUpdateMedicine}
             />
           )}
           {activeTab === 'alerts' && (
