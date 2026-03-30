@@ -9,10 +9,15 @@ const { Pool } = pg;
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
-  connectionTimeoutMillis: 5000, 
-  idleTimeoutMillis: 30000, 
+  connectionTimeoutMillis: 5000, // 5 seconds timeout
+  idleTimeoutMillis: 30000, // 30 seconds idle timeout
 });
 
+if (!process.env.DATABASE_URL) {
+  console.error("CRITICAL: DATABASE_URL environment variable is not defined.");
+}
+
+// Test connection on startup
 pool.on('error', (err) => {
   console.error('Unexpected error on idle client', err);
 });

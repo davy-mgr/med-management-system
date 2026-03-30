@@ -5,6 +5,10 @@ import pool from "../config/db.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+if (!JWT_SECRET) {
+  console.error("CRITICAL: JWT_SECRET environment variable is not defined.");
+}
+
 const signupSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
