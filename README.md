@@ -81,19 +81,8 @@ Vercel is optimized for frontend and serverless functions.
 ## Database Connection Details
 The application uses the `pg` library to connect to PostgreSQL.
 
-- **SSL**: The application is configured to use `ssl: { rejectUnauthorized: false }`, which is required by most cloud providers like Render and Neon.
 - **Initialization**: On the first run, the application will automatically create the necessary tables (`users`, `medicines`, `transactions`) and seed initial data if the database is empty.
 
-## .env Template
-```env
-# DATABASE_URL: PostgreSQL connection string.
-# Example: postgresql://user:password@localhost:5432/med_db
-DATABASE_URL=
-
-# JWT_SECRET: Secret key for JWT signing.
-# Use a long, random string.
-JWT_SECRET=
-```
 
 ## Features
 
