@@ -11,16 +11,16 @@ import {
   Search
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { api } from './services/api.js';
+import { api } from '@/services/api.js';
 
 // Pages
-import LoginPage from './pages/LoginPage.jsx';
-import SignupPage from './pages/SignupPage.jsx';
-import DashboardPage from './pages/DashboardPage.jsx';
-import InventoryPage from './pages/InventoryPage.jsx';
-import AlertsPage from './pages/AlertsPage.jsx';
-import HistoryPage from './pages/HistoryPage.jsx';
-import UserManagementPage from './pages/UserManagementPage.jsx';
+import LoginPage from '@/pages/LoginPage.jsx';
+import SignupPage from '@/pages/SignupPage.jsx';
+import DashboardPage from '@/pages/DashboardPage.jsx';
+import InventoryPage from '@/pages/InventoryPage.jsx';
+import AlertsPage from '@/pages/AlertsPage.jsx';
+import HistoryPage from '@/pages/HistoryPage.jsx';
+import UserManagementPage from '@/pages/UserManagementPage.jsx';
 
 export default function App() {
   const [user, setUser] = useState(() => {
