@@ -11,7 +11,7 @@ import {
   Search
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { api } from './services/api';
+import { api } from './services/api.js';
 
 // Pages
 import LoginPage from './pages/LoginPage.jsx';
